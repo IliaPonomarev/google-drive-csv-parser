@@ -4,8 +4,8 @@ import { Schema } from 'mongoose';
 import { IMovieRating } from './model';
 
 const movieRatingSchema = new Schema<IMovieRating>({
-	movie_id: { type: String, required: true, trim: true, index: true, unique: true },
-  rating: { type: String, required: true, trim: true, index: true }
+	movie_id: { type: Number, required: true, trim: true, index: true, background: false  },
+  rating: { type: Number, required: true, trim: true, index: true, background: false  }
 }, { timestamps: true });
 
 movieRatingSchema.plugin(uniqueValidator);

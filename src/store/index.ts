@@ -28,4 +28,8 @@ export class DB implements IDB {
   public close(): Promise<void> {
 		return mongoose.connection.close();
   }
+
+  public drop() {
+    return mongoose.connection.db.dropDatabase();
+  }
 }

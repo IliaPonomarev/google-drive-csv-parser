@@ -5,4 +5,5 @@ export interface IDBConfig {
 export interface IDB {
   connect();
   close(): Promise<void>;
+  drop();
 }

@@ -10,4 +10,8 @@ export class DBMovieInfo implements IDBMovieInfo {
 	constructor() {
     this.model = model<IMovieInfo>('Movie', movieInfoSchema);
 	}
+
+  public add(instance: IMovieInfo) {
+    return this.model.create(instance);
+  }
 }

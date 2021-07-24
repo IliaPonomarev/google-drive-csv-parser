@@ -10,4 +10,8 @@ export class DBMovieRating implements IDBMovieRating {
 	constructor() {
     this.model = model<IMovieRating>('Movie_rating', movieRatingSchema);
 	}
+
+  public add(instance: IMovieRating) {
+    return this.model.create(instance);
+  }
 }
