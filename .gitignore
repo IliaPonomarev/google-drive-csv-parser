@@ -1,1 +1,3 @@
 node_modules
+src/google-drive/credentials.json
+src/google-drive/token.json
