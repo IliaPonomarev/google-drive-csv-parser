@@ -1,0 +1,38 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-no-unused-expression-chai"
+  ],
+  "rules": {
+      "indent": [
+          "error",
+          "tab"
+      ],
+      "quotemark": {
+        "options": [
+          "single",
+          "error",
+          "avoid-escape"
+        ]
+      },
+      "semicolon": {
+        "options": [
+          "error",
+          "always"
+        ]
+      },
+      "variable-name": {
+        "options": ["ban-keywords", "check-format", "allow-pascal-case", "allow-leading-underscore"]
+      },
+      "max-line-length": { "options": 180 },
+      "align": {
+        "options": ["parameters"]
+      },
+      "object-literal-sort-keys": false,
+      "max-classes-per-file": false,
+      "only-arrow-functions": false,
+      "no-console": false,
+      "ordered-imports": false,
+      "no-empty": [true, "allow-empty-catch"]
+  }
+}

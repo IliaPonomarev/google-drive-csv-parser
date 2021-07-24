@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "declaration": true,
+    "lib": [
+      "es2018"
+    ],
+  },
+
+  "exclude": [
+    "node_modules",
+    ".build",
+
+    "**/e2e",
+    "**/*.e2e.ts",
+    "**/*.spec.ts"
+  ]
+}
