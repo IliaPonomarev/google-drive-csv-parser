@@ -1,6 +1,3 @@
-import * as http from 'http';
-import * as url from 'url';
-
 import { DB } from './store';
 // import { GoogleDrive } from './google-drive';
 
@@ -22,8 +19,13 @@ async function run() {
 
     console.log('Соединение с базой данных установлено');
 
-    console.log(await db.movieInfo.model.find());
-    console.log(await db.movieRating.model.find());
+    await db.movieInfo.findWithHighestRating(10);
+
+
+    // films.map
+
+    // console.log(await db.movieInfo.model.find());
+    // console.log(await db.movieRating.model.find());
 
 
 
@@ -56,19 +58,6 @@ async function run() {
     //     }
     //   });
     // }
-
-    const server = http.createServer((req, res) => {
-      console.log('request', req.url);
-
-      const query = url.parse(req.url, true).query;
-
-      console.log(query.code);
-    });
-
-
-    server.listen(8053, () => {
-        console.log(`server is listening on 8053`);
-    });
 	} catch (error) {
 		console.log('Error', error);
 

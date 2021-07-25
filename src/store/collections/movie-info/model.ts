@@ -5,8 +5,11 @@ export interface IMovieInfo {
   original_title: string;
 }
 
+export interface IMovieInfoModel extends Model<IMovieInfo> {}
+
 export interface IDBMovieInfo {
-  model: Model<IMovieInfo>;
+  model: any;
 
   add(instance: IMovieInfo);
+  findWithHighestRating(limit?);
 }
