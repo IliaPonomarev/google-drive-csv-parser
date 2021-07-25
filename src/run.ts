@@ -1,7 +1,7 @@
 import { DB } from './store';
-// import { GoogleDrive } from './google-drive';
+import { GoogleDrive } from './google-drive';
 
-// import { parseCSV } from './parser';
+import { parseCSV } from './parser';
 
 async function run() {
   const connectionUrl = process.argv[2];
@@ -15,49 +15,61 @@ async function run() {
 
     await db.connect();
 
-    // await db.close();
-
     console.log('Соединение с базой данных установлено');
 
-    await db.movieInfo.findWithHighestRating(10);
+    const googleDrive = new GoogleDrive();
+    const googleDriveAuth = await googleDrive.start();
+
+    const metaFile = await googleDrive.getFileByName(googleDriveAuth, 'movies_metadata.csv');
+    const ratingFile = await googleDrive.getFileByName(googleDriveAuth, 'ratings.csv');
+
+    if (metaFile && ratingFile) {
+      // const metaResponse = await googleDrive.downloadFile(googleDriveAuth, metaFile.id);
+      const ratingResponse = await googleDrive.downloadFile(googleDriveAuth, ratingFile.id);
+
+      // const metaFromFile = await parseCSV(metaResponse.data);
+
+      // const meta = metaFromFile
+      //   .filter(movie => movie.id && Number.isInteger(+movie.id) && movie.original_title)
+      //   .map(movie => {
+      //     return {
+      //       movie_id: Number(movie.id),
+      //       original_title: movie.original_title
+      //     };
+      //   });
+
+      // await db.movieInfo.model.insertMany(meta);
 
 
-    // films.map
+      const ratingFromFile = await parseCSV(ratingResponse.data);
 
-    // console.log(await db.movieInfo.model.find());
-    // console.log(await db.movieRating.model.find());
+      const rating = ratingFromFile
+        .filter(movie => movie.movieId && movie.rating && Number.isInteger(+movie.movieId) && Number.isInteger(+movie.rating))
+        .map(movie => {
+          return {
+            movie_id: Number(movie.movieId),
+            rating: Number(movie.rating)
+          };
+        });
+
+      // await db.movieRating.model.insertMany(rating);
+
+      console.log('data inserted', rating);
+
+      // await parseCSV(ratingResponse.data, async (data) => {
+      //   const { movieId: movie_id, rating } = data;
+
+      //   if (movie_id && rating) {
+      //     db.movieRating.add({ movie_id: Number(movie_id), rating: Number(rating) });
+      //   }
+      // });
+
+      const films = await db.movieInfo.findWithHighestRating(10);
+
+      console.log(films);
+    }
 
 
-
-    // const googleDrive = new GoogleDrive();
-    // const googleDriveAuth = await googleDrive.start();
-
-    // const ratingFile = await googleDrive.getFileByName(googleDriveAuth, 'ratings.csv');
-    // const metaFile = await googleDrive.getFileByName(googleDriveAuth, 'movies_metadata.csv');
-
-    // if (metaFile) {
-    //   const metaResponse = await googleDrive.downloadFile(googleDriveAuth, metaFile.id);
-
-    //   parseCSV(metaResponse.data, async (data) => {
-    //     const { id: movie_id, original_title } = data;
-
-    //     if (movie_id && original_title) {
-    //       await db.movieInfo.add({ movie_id: Number(movie_id), original_title });
-    //     }
-    //   });
-    // }
-
-    // if (ratingFile) {
-    //   const ratingResponse = await googleDrive.downloadFile(googleDriveAuth, ratingFile.id);
-
-    //   parseCSV(ratingResponse.data, async (data) => {
-    //     const { movieId: movie_id, rating } = data;
-
-    //     if (movie_id && rating) {
-    //       await db.movieRating.add({ movie_id: Number(movie_id), rating: Number(rating) });
-    //     }
-    //   });
-    // }
 	} catch (error) {
 		console.log('Error', error);
 
