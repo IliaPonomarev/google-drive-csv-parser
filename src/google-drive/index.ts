@@ -104,23 +104,26 @@ export class GoogleDrive {
 
     const getTokenAsync = util.promisify(oAuth2Client.getToken.bind(oAuth2Client));
 
-    rl.question('Enter the code from that page here: ', async (code) => {
-      rl.close();
+    return new Promise((resolve, reject) => {
+      rl.question('Enter the code from that page here: ', async (code) => {
+        rl.close();
 
-      try {
-        const token = await getTokenAsync(code);
+        const decodeString = decodeURIComponent(code);
 
-        oAuth2Client.setCredentials(token);
+        try {
+          const token = await getTokenAsync(decodeString);
 
-        await fse.writeJson(TOKEN_PATH, token);
+          oAuth2Client.setCredentials(token);
 
-        console.log('Token stored to', TOKEN_PATH);
+          await fse.writeJson(TOKEN_PATH, token);
 
-        return oAuth2Client;
+          console.log('Token stored to', TOKEN_PATH);
 
-      } catch(e) {
-        console.error('Error retrieving access token', e);
-      }
+          resolve(oAuth2Client);
+        } catch(e) {
+          reject(`Error retrieving access token ${e}`);
+        }
+      });
     });
   }
 }
