@@ -75,6 +75,10 @@ export class GoogleDrive {
       // Check if we have previously stored a token.
       const token = await fse.readJson(TOKEN_PATH);
 
+      if (this.isTokenExpired(token.expiry_date)) {
+        return this.getAccessToken(oAuth2Client);
+      }
+
       oAuth2Client.setCredentials(token);
 
       return oAuth2Client;
@@ -125,5 +129,11 @@ export class GoogleDrive {
         }
       });
     });
+  }
+
+  private isTokenExpired(expiryDate: number): boolean {
+    const now = new Date().getTime();
+
+    return now > expiryDate;
   }
 }
