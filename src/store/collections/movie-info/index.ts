@@ -33,7 +33,7 @@ export class DBMovieInfo implements IDBMovieInfo {
             {
               _id: '$movie_id',
               avgRating: { $avg: '$movieInfo.rating' },
-              original_title: { $first: '$original_title' }
+              originalTitle: { $first: '$original_title' }
             }
         },
         {

@@ -1,17 +1,27 @@
-import * as csv from 'csv-parser';
+import * as csvParser from 'csv-parser';
 
-export function parseCSV(res): Promise<any[]> {
-  const results = [];
+export function parseCSV(res, callback): Promise<boolean> {
+  let temp = [];
+
   return new Promise((resolve) => {
     res
-      .pipe(csv())
-      .on('data', (data) => {
-        results.push(data);
+      .on('data', async () => {
+        res.pause();
+
+        if (temp.length > 0) {
+          await callback(temp);
+
+          temp = [];
+        }
+
+        res.resume();
+      })
+      .pipe(csvParser())
+      .on('data', async (data) => {
+        temp.push(data);
       })
       .on('end', () => {
-        console.log('Файл записался');
-
-        resolve(results);
+        resolve(true);
       });
   });
 }
